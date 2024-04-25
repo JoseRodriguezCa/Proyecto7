@@ -57,12 +57,18 @@ const changeUser = async (req,res,next) => {
     try {
         const { id } = req.params;
         const newUser = new User(req.body);
-        const { contraseña } = newUser;
+        const oldUser = await User.findById(id);
         newUser._id = id;
+        if(oldUser.rol.includes(req.body.rol)){
+            return res.status(400).json("ya tienes este rol")
+        }
         if (newUser.contraseña) {
             const hashedPassword = bcrypt.hashSync(newUser.contraseña, 10);
             newUser.contraseña = hashedPassword;
         }
+        if(!oldUser.rol.includes(newUser.rol)){
+            newUser.rol = [...oldUser.rol, ...newUser.rol];
+          }
         const userUpdated = await User.findByIdAndUpdate(id,newUser,{
             new:true
         });
