@@ -68,7 +68,7 @@ const changeUser = async (req,res,next) => {
         }
         if(!oldUser.rol.includes(newUser.rol)){
             newUser.rol = [...oldUser.rol, ...newUser.rol];
-          }
+        }
         const userUpdated = await User.findByIdAndUpdate(id,newUser,{
             new:true
         });
