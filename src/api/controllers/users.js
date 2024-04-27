@@ -44,10 +44,13 @@ const loginUser = async (req,res,next ) => {
 
 const createUser = async (req,res,next) => {
     try {
-        const newUser = new User(req.body);
-        const userSaved = await newUser.save();
-        console.log(userSaved);
-        return res.status(201).json(userSaved);
+        if (req.body.rol && req.body.rol === ("usuario")) {
+            const newUser = new User(req.body);
+            const userSaved = await newUser.save();
+            return res.status(201).json(userSaved);
+        } else {
+            return res.status(400).json({ error: "El rol debe ser 'usuario'" });
+        }
     } catch (error) {
         return res.status(400).json("error en createUser");
     }
